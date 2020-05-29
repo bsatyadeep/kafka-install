@@ -225,16 +225,7 @@ install_kafka()
 #------------------------
 install_java
 
-if [ ${ZOOKEEPER1KAFKA0} -eq "1" ];
-then
-	#
-	#Install zookeeper
-	#-----------------------
-	install_zookeeper
-else
 	#
 	#Install kafka
 	#-----------------------
 	install_kafka
-fi
-
