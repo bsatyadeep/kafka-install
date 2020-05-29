@@ -122,11 +122,11 @@ install_java()
     apt-get -y update
     echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
     echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-    apt-get -y install oracle-java7-installer
-    apt-get -y install openjdk-7-jdk openjdk-7-jre
+    apt-get -y install oracle-java8-installer
+    apt-get -y install openjdk-8-jdk openjdk-8-jre
 cat >> /etc/environment <<EOL
-JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
-JRE_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
 EOL
 }
 
