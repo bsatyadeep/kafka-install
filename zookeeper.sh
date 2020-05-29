@@ -9,7 +9,11 @@ update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/
 chmod a+x /usr/bin/java
 chmod a+x /usr/bin/javac
 chmod a+x /usr/bin/javaws
-
+apt-get -y install openjdk-8-jdk openjdk-8-jre
+cat >> /etc/environment <<EOL
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+EOL
 cd /usr/local
 
 wget "https://downloads.apache.org/zookeeper/zookeeper-3.5.8/apache-zookeeper-3.5.8.tar.gz"
