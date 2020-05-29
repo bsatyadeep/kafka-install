@@ -177,7 +177,7 @@ install_zookeeper()
 
 	echo $(($1+1)) >> /var/lib/zookeeper/myid
 
-	apache-zookeeper-3.5.8/bin/zkServer.sh start
+	apache-zookeeper-3.5.8/bin/zkServer.sh start &
 }
 
 # Install kafka
