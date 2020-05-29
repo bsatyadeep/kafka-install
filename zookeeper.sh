@@ -34,4 +34,4 @@ mkdir -p /var/lib/zookeeper
 
 echo $(($1+1)) >> /var/lib/zookeeper/myid
 
-zookeeper-3.4.12/bin/zkServer.sh start
+apache-zookeeper-3.5.8/bin/zkServer.sh start
