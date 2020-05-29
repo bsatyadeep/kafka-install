@@ -15,7 +15,7 @@ cd /usr/local
 wget "https://downloads.apache.org/zookeeper/zookeeper-3.5.8/apache-zookeeper-3.5.8.tar.gz"
 tar -xvf "apache-zookeeper-3.5.8.tar.gz"
 
-touch zookeeper-3.4.12/conf/zoo.cfg
+touch apache-zookeeper-3.5.8/conf/zoo.cfg
 
 echo "tickTime=2000" >> apache-zookeeper-3.5.8/conf/zoo.cfg
 echo "dataDir=/var/lib/zookeeper" >> apache-zookeeper-3.5.8/conf/zoo.cfg
