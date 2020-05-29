@@ -36,7 +36,7 @@ echo "syncLimit=2" >> apache-zookeeper-3.5.8/conf/zoo.cfg
 i=1
 while [ $i -le $2 ]
 do
-    echo "server.$i=$2:2888:3888" >> apache-zookeeper-3.5.8/conf/zoo.cfg
+    echo "server.$i=$3:2888:3888" >> apache-zookeeper-3.5.8/conf/zoo.cfg
     i=$(($i+1))
 done
 
