@@ -9,13 +9,7 @@ update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/
 chmod a+x /usr/bin/java
 chmod a+x /usr/bin/javac
 chmod a+x /usr/bin/javaws
-log "Installing Java"
-add-apt-repository -y ppa:webupd8team/java
-apt-get -y update
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-#apt-get -y install oracle-java7-installer
-apt-get -y install openjdk-8-jdk openjdk-8-jre
+yum install openjdk-8-jdk openjdk-8-jre
 cat >> /etc/environment <<EOL
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
