@@ -75,33 +75,21 @@ else
 fi
 
 #Script Parameters
-KF_VERSION="0.8.2.1"
+KF_VERSION="2.5.0"
 BROKER_ID=0
 ZOOKEEPER1KAFKA0="0"
 
 ZOOKEEPER_IP_PREFIX="10.0.0.4"
-INSTANCE_COUNT=1
+INSTANCE_COUNT=3
 ZOOKEEPER_PORT="2181"
 
 #Loop through options passed
-while getopts :k:b:z:i:c:p:h optname; do
+while getopts :b:h optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
-    k)  #kafka version
-      KF_VERSION=${OPTARG}
-      ;;
     b)  #broker id
       BROKER_ID=${OPTARG}
       ;;
-    z)  #zookeeper not kafka
-      ZOOKEEPER1KAFKA0=${OPTARG}
-      ;;
-    i)  #zookeeper Private IP address prefix
-      ZOOKEEPER_IP_PREFIX=${OPTARG}
-      ;;
-    c) # Number of instances
-	INSTANCE_COUNT=${OPTARG}
-	;;
     h)  #show help
       help
       exit 2
@@ -117,68 +105,27 @@ done
 # Install Oracle Java
 install_java()
 {
-    log "Installing Java"
-    add-apt-repository -y ppa:webupd8team/java
-    apt-get -y update
-    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-    apt-get -y install oracle-java8-installer
-    apt-get -y install openjdk-8-jdk openjdk-8-jre
+tar -xvf jdk-7*
+mkdir /usr/lib/jvm
+mv ./jdk1.7* /usr/lib/jvm/jdk1.7.0
+update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.7.0/bin/java" 1
+update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.7.0/bin/javac" 1
+update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/bin/javaws" 1
+chmod a+x /usr/bin/java
+chmod a+x /usr/bin/javac
+chmod a+x /usr/bin/javaws
+yum install openjdk-8-jdk openjdk-8-jre
 cat >> /etc/environment <<EOL
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
 EOL
+
 }
 
 # Expand a list of successive IP range defined by a starting address prefix (e.g. 10.0.0.1) and the number of machines in the range
-# 10.0.0.1-3 would be converted to "10.0.0.10 10.0.0.11 10.0.0.12"
+# 10.0.0.1-3 would be converted to "10.0.0.10 10.0.0.11 10.0.0.12
 
-expand_ip_range_for_server_properties() {
-    IFS='-' read -a HOST_IPS <<< "$1"
-    for (( n=0 ; n<("${HOST_IPS[1]}"+0) ; n++))
-    do
-        echo "server.$(expr ${n} + 1)=${HOST_IPS[0]}${n}:2888:3888" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-    done
-}
 
-function join { local IFS="$1"; shift; echo "$*"; }
-
-expand_ip_range() {
-    IFS='-' read -a HOST_IPS <<< "$1"
-
-    declare -a EXPAND_STATICIP_RANGE_RESULTS=()
-
-    for (( n=0 ; n<("${HOST_IPS[1]}"+0) ; n++))
-    do
-        HOST="${HOST_IPS[0]}${n}:${ZOOKEEPER_PORT}"
-                EXPAND_STATICIP_RANGE_RESULTS+=($HOST)
-    done
-
-    echo "${EXPAND_STATICIP_RANGE_RESULTS[@]}"
-}
-
-# Install Zookeeper - can expose zookeeper version
-install_zookeeper()
-{
-	mkdir -p /var/lib/zookeeper
-	cd /var/lib/zookeeper
-	wget "https://downloads.apache.org/zookeeper/zookeeper-3.5.8/apache-zookeeper-3.5.8.tar.gz"
-	tar -xvf "apache-zookeeper-3.5.8.tar.gz"
-
-	touch apache-zookeeper-3.5.8/conf/zoo.cfg
-
-	echo "tickTime=2000" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-	echo "dataDir=/var/lib/zookeeper" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-	echo "clientPort=2181" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-	echo "initLimit=5" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-	echo "syncLimit=2" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-	# OLD Test echo "server.1=${ZOOKEEPER_IP_PREFIX}:2888:3888" >> zookeeper-3.4.6/conf/zoo.cfg
-	$(expand_ip_range_for_server_properties "${ZOOKEEPER_IP_PREFIX}-${INSTANCE_COUNT}")
-
-	echo $(($1+1)) >> /var/lib/zookeeper/myid
-
-	apache-zookeeper-3.5.8/bin/zkServer.sh start &
-}
 
 # Install kafka
 install_kafka()
@@ -187,7 +134,7 @@ install_kafka()
 	name=kafka
 	version=${KF_VERSION}
 	#this Kafka version is prefix same used for all versions
-	kafkaversion=2.10
+	kafkaversion=2.12
 	description="Apache Kafka is a distributed publish-subscribe messaging system."
 	url="https://kafka.apache.org/"
 	arch="all"
@@ -208,7 +155,7 @@ install_kafka()
 	cd kafka_${kafkaversion}-${version}
 
 	sed -r -i "s/(broker.id)=(.*)/\1=${BROKER_ID}/g" config/server.properties
-	sed -r -i "s/(zookeeper.connect)=(.*)/\1=$(join , $(expand_ip_range "${ZOOKEEPER_IP_PREFIX}-${INSTANCE_COUNT}"))/g" config/server.properties
+	sed -r -i "s/(zookeeper.connect)=(.*)/\1=10.119.74.203,10.119.74.204,10.119.74.205/g" config/server.properties
 #	cp config/server.properties config/server-1.properties
 #	sed -r -i "s/(broker.id)=(.*)/\1=1/g" config/server-1.properties
 #	sed -r -i "s/^(port)=(.*)/\1=9093/g" config/server-1.properties````
