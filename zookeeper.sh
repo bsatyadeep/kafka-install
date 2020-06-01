@@ -9,13 +9,13 @@ update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/
 chmod a+x /usr/bin/java
 chmod a+x /usr/bin/javac
 chmod a+x /usr/bin/javaws
- yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+sudo yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
 cat > /etc/profile.d/java8.sh <<EOF
 export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
 export PATH=\$PATH:\$JAVA_HOME/bin
 export CLASSPATH=.:\$JAVA_HOME/jre/lib:\$JAVA_HOME/lib:\$JAVA_HOME/lib/tools.jar
 EOF
-
+source /etc/profile.d/java8.sh
 wget "https://downloads.apache.org/zookeeper/zookeeper-3.5.8/apache-zookeeper-3.5.8.tar.gz"
 tar -xvf "apache-zookeeper-3.5.8.tar.gz"
 
