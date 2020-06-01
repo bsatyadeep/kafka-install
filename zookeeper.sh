@@ -16,6 +16,7 @@ export PATH=\$PATH:\$JAVA_HOME/bin
 export CLASSPATH=.:\$JAVA_HOME/jre/lib:\$JAVA_HOME/lib:\$JAVA_HOME/lib/tools.jar
 EOF
 source /etc/profile.d/java8.sh
+cd /usr/local
 wget "https://downloads.apache.org/zookeeper/zookeeper-3.5.8/apache-zookeeper-3.5.8.tar.gz"
 tar -xvf "apache-zookeeper-3.5.8.tar.gz"
 
