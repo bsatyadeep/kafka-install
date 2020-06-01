@@ -54,53 +54,20 @@ log()
 
 log "Begin execution of kafka script extension on ${HOSTNAME}"
 
-if [ "${UID}" -ne 0 ];
-then
-    log "Script executed without root permissions"
-    echo "You must be root to run this program." >&2
-    exit 3
-fi
-
 # TEMP FIX - Re-evaluate and remove when possible
 # This is an interim fix for hostname resolution in current VM
-grep -q "${HOSTNAME}" /etc/hosts
-if [ $? -eq $SUCCESS ];
-then
-  echo "${HOSTNAME}found in /etc/hosts"
-else
-  echo "${HOSTNAME} not found in /etc/hosts"
   # Append it to the hsots file if not there
   echo "127.0.0.1 $(hostname)" >> /etc/hosts
   log "hostname ${HOSTNAME} added to /etc/hosts"
-fi
 
 #Script Parameters
 KF_VERSION="2.5.0"
-BROKER_ID=0
+BROKER_ID=$1
 ZOOKEEPER1KAFKA0="0"
 
 ZOOKEEPER_IP_PREFIX="10.0.0.4"
 INSTANCE_COUNT=3
 ZOOKEEPER_PORT="2181"
-
-#Loop through options passed
-while getopts :b:h optname; do
-    log "Option $optname set with value ${OPTARG}"
-  case $optname in
-    b)  #broker id
-      BROKER_ID=${OPTARG}
-      ;;
-    h)  #show help
-      help
-      exit 2
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      help
-      exit 2
-      ;;
-  esac
-done
 
 # Install Oracle Java
 install_java()
@@ -176,3 +143,4 @@ install_java
 	#Install kafka
 	#-----------------------
 	install_kafka
+
