@@ -81,10 +81,10 @@ update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/lib/jvm/jdk1.7.0/
 chmod a+x /usr/bin/java
 chmod a+x /usr/bin/javac
 chmod a+x /usr/bin/javaws
-yum install openjdk-8-jdk openjdk-8-jre
+yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
 cat >> /etc/environment <<EOL
-JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+JRE_HOME=/usr/lib/jvm/java-1.8.0-openjdk/jre
 EOL
 
 }
@@ -122,7 +122,7 @@ install_kafka()
 	cd kafka_${kafkaversion}-${version}
 
 	sed -r -i "s/(broker.id)=(.*)/\1=${BROKER_ID}/g" config/server.properties
-	sed -r -i "s/(zookeeper.connect)=(.*)/\1=10.119.74.203,10.119.74.204,10.119.74.205/g" config/server.properties
+	sed -r -i "s/(zookeeper.connect)=(.*)/\1=10.119.74.203:2181,10.119.74.204:2181,10.119.74.205:2181/g" config/server.properties
 #	cp config/server.properties config/server-1.properties
 #	sed -r -i "s/(broker.id)=(.*)/\1=1/g" config/server-1.properties
 #	sed -r -i "s/^(port)=(.*)/\1=9093/g" config/server-1.properties````
@@ -143,4 +143,3 @@ install_java
 	#Install kafka
 	#-----------------------
 	install_kafka
-
