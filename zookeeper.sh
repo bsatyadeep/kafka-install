@@ -18,20 +18,20 @@ EOF
 source /etc/profile.d/java8.sh
 cd /usr/local
 wget "https://downloads.apache.org/zookeeper/zookeeper-3.5.8/apache-zookeeper-3.5.8-bin.tar.gz"
-tar -xvf "apache-zookeeper-3.5.8.tar.gz"
+tar -xvf "apache-zookeeper-3.5.8-bin.tar.gz"
 
-touch apache-zookeeper-3.5.8/conf/zoo.cfg
+touch apache-zookeeper-3.5.8-bin/conf/zoo.cfg
 
-echo "tickTime=2000" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-echo "dataDir=/var/lib/zookeeper" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-echo "clientPort=2181" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-echo "initLimit=5" >> apache-zookeeper-3.5.8/conf/zoo.cfg
-echo "syncLimit=2" >> apache-zookeeper-3.5.8/conf/zoo.cfg
+echo "tickTime=2000" >> apache-zookeeper-3.5.8-bin/conf/zoo.cfg
+echo "dataDir=/var/lib/zookeeper" >> apache-zookeeper-3.5.8-bin/conf/zoo.cfg
+echo "clientPort=2181" >> apache-zookeeper-3.5.8-bin/conf/zoo.cfg
+echo "initLimit=5" >> apache-zookeeper-3.5.8-bin/conf/zoo.cfg
+echo "syncLimit=2" >> apache-zookeeper-3.5.8-bin/conf/zoo.cfg
 
 i=1
 while [ $i -le $2 ]
 do
-    echo "server.$i=$3:2888:3888" >> apache-zookeeper-3.5.8/conf/zoo.cfg
+    echo "server.$i=$3:2888:3888" >> apache-zookeeper-3.5.8-bin/conf/zoo.cfg
     i=$(($i+1))
 done
 
@@ -39,4 +39,4 @@ mkdir -p /var/lib/zookeeper
 
 echo $(($1+1)) >> /var/lib/zookeeper/myid
 
-apache-zookeeper-3.5.8/bin/zkServer.sh start
+apache-zookeeper-3.5.8-bin/bin/zkServer.sh start
